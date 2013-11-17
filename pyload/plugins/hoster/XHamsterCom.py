@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import re
-from urllib import unquote
+from urllib import unquote, quote_plus, unquote_plus
 
 from module.plugins.Hoster import Hoster
 from module.common.json_layer import json_loads
@@ -69,10 +69,10 @@ class XHamsterCom(Hoster):
             self.fail("Parse error (url_mode)")
 
         if self.desired_fmt == ".mp4":
-            file_url = re.search(r"<a href=\"" + srv_url + "(.+?)\"", self.html)
+            file_url = re.search(r"" + quote_plus(srv_url) + "(.+?)\"", self.html)
             if file_url is None:
                 self.fail("Parse error (file_url)")
-            file_url = file_url.group(1)
+            file_url = unquote_plus(file_url.group(1))
             long_url = srv_url + file_url
             self.logDebug(_("long_url: %s") % long_url)
         else:
